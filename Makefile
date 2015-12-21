@@ -1,7 +1,12 @@
-all: main.class execute
+# OpenJDK 1.8
 
-main.class: main.java
+FILE = ParallelMerge
+DEPS = *.java
+
+all: $(FILE).class execute
+
+$(FILE).class: $(DEPS)
 	javac $<
 
-execute: main.class
-	java main
+execute: $(FILE).class
+	java $(FILE)
