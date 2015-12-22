@@ -1,12 +1,16 @@
 # OpenJDK 1.8
 
-FILE = ParallelMerge
+FILE = ParallelMergeSort
+FILE2 = MergeSort
 DEPS = *.java
 
-all: $(FILE).class execute
+all: $(FILE).class sort
 
-$(FILE).class: $(DEPS)
+$(FILE).class: $(FILE).java
 	javac $<
 
-execute: $(FILE).class
+$(FILE2).class: $(FILE).java
+	javac $<
+
+sort: $(FILE).class
 	java $(FILE)
