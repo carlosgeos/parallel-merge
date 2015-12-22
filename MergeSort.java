@@ -9,8 +9,8 @@ import java.lang.*;
 
 public class MergeSort
 {
-    private static final int SIZE = 100;
-    private static final int ORDER = 10;
+    private static final int SIZE = 50000000;
+    private static final int ORDER = 1000000;
     private static final int SENTINEL = ORDER + 1;
 
     public static void main(String args[])
@@ -19,7 +19,7 @@ public class MergeSort
 	sort(arr, 0, SIZE - 1);
 	System.out.println("Sorted array:");
 	System.out.println("---------------");
-	display(arr);
+	//display(arr);
     }
 
     public static int[] generateArray() {
@@ -32,7 +32,7 @@ public class MergeSort
 
 	System.out.println("Unsorted array:");
 	System.out.println("---------------");
-	display(arr);
+	//display(arr);
 	return arr;
     }
 

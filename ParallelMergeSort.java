@@ -7,19 +7,17 @@
 import java.util.*;
 import java.lang.*;
 
-public class ParallelMergeSort
-{
-    private static final int SIZE = 100;
-    private static final int ORDER = 10;
+public class ParallelMergeSort {
+    private static final int SIZE = 50000000;
+    private static final int ORDER = 1000000;
     private static final int SENTINEL = ORDER + 1;
 
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
 	int[] arr = generateArray();
-	sort(arr, 0, SIZE - 1);
+	sort(arr, 0, SIZE - 1, 2);
 	System.out.println("Sorted array:");
 	System.out.println("---------------");
-	display(arr);
+	//display(arr);
     }
 
     public static int[] generateArray() {
@@ -32,7 +30,7 @@ public class ParallelMergeSort
 
 	System.out.println("Unsorted array:");
 	System.out.println("---------------");
-	display(arr);
+	//display(arr);
 	return arr;
     }
 
@@ -75,11 +73,27 @@ public class ParallelMergeSort
 	}
     }
 
-    public static void sort(int[] arr, int start, int end) {
+    public static void sort(int[] arr, int start, int end, int thread) {
+
     	if (start < end) {
     	    int middle = (start + end) / 2;
-    	    sort(arr, start, middle);
-    	    sort(arr, middle + 1, end);
+
+	    if (thread > 0) {
+		Thread leftT = new Thread(new Helper(arr, start, middle, thread - 1));
+		Thread rightT = new Thread(new Helper(arr, middle + 1, end, thread - 1));
+		leftT.start();
+		rightT.start();
+		try {
+		    leftT.join();
+		    rightT.join();
+		} catch (InterruptedException e) {}
+	    } else {
+		sort(arr, start, middle, thread);
+		sort(arr, middle + 1, end, thread);
+	    }
+
+    	    // sort(arr, start, middle);
+    	    // sort(arr, middle + 1, end);
 	    merge(arr, start, middle, end);
     	}
     }
