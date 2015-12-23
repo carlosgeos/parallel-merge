@@ -4,83 +4,50 @@
  * Projet Java
  */
 
-import java.util.*;
 import java.lang.*;
+import java.util.*;
+import java.util.concurrent.*;
 
-public class ParallelMergeSort {
-    private static final int SIZE = 50000000;
-    private static final int ORDER = 1000000;
-    private static final int SENTINEL = ORDER + 1;
+public class ParallelMergeSort extends MergeSort {
+    private static final int INIT_SIZE = 60000;
+    private static StopWatch sw = new StopWatch();;
 
     public static void main(String args[]) {
-	int[] arr = generateArray();
-	sort(arr, 0, SIZE - 1, 2);
-	System.out.println("Sorted array:");
-	System.out.println("---------------");
-	//display(arr);
-    }
+	int cores = Runtime.getRuntime().availableProcessors();
+	int size = INIT_SIZE;
 
-    public static int[] generateArray() {
-	Random randomNumber = new Random();
-	int[] arr = new int[SIZE];
-
-	for (int i = 0; i < SIZE; ++i) {
-	    arr[i] = randomNumber.nextInt(ORDER);
+	System.out.println("Sequential sorting:");
+	System.out.println("-------------------");
+	for (int i = 0; i < 7; ++i) {
+	    int[] arr = generateArray(size);
+	    sw.keepTime(i);
+	    MergeSort.sort(arr, 0, size - 1);
+	    System.out.println("Elements: \t" + size+ "\telapsed time: " + sw.elapsedTime(i) + "\tms");
+	    size *= 2;
 	}
 
-	System.out.println("Unsorted array:");
-	System.out.println("---------------");
-	//display(arr);
-	return arr;
-    }
-
-    public static void display(int[] arr) {
-	System.out.print("[ ");
-	for (int i = 0; i < SIZE; ++i) {
-	    System.out.print(arr[i] + " ");
+	size = INIT_SIZE;
+	System.out.println("\n\nParallel sorting:");
+	System.out.println("-----------------");
+	for (int i = 0; i < 7; ++i) {
+	    int[] arr = generateArray(size);
+	    sw.keepTime(i);
+	    sort(arr, 0, size - 1, cores);
+	    System.out.println("Elements: \t" + size+ "\telapsed time: " + sw.elapsedTime(i) + "\tms");
+	    size *= 2;
 	}
-	System.out.println("]\n");
-    }
-
-    public static void displayTemp(int[] arr, int start, int end) {
-	System.out.println("temp array:\n------------\n");
-	System.out.print("[ ");
-	for (int i = start; i < end + 1; ++i) {
-	    System.out.print(arr[i] + " ");
-	}
-	System.out.println("]\n");
 
     }
 
-    public static void merge(int arr[], int start, int middle, int end) {
-	int size1 = middle - start + 1;
-	int size2 = end - middle;
-	int[] left = new int[size1 + 1];
-	int[] right = new int[size2 + 1];
-
-	for (int i = 0; i < size1; ++i) left[i] = arr[start + i];
-	for (int j = 0; j < size2; ++j) right[j] = arr[middle + j + 1];
-	left[size1] = SENTINEL;
-	right[size2] = SENTINEL;
-
-	int i = 0; int j = 0;
-	for (int k = start; k < end + 1; ++k) {
-	    if (left[i] <= right[j]) {
-		arr[k] = left[i]; ++i;
-	    } else {
-		arr[k] = right[j]; ++j;
-	    }
-	}
-    }
-
-    public static void sort(int[] arr, int start, int end, int thread) {
-
+    public static void sort(int[] arr, int start, int end, int threads) {
+	// Divide and conquer, with number of processors
+	// available. Algorithm structure from Cormen.
     	if (start < end) {
     	    int middle = (start + end) / 2;
-
-	    if (thread > 0) {
-		Thread leftT = new Thread(new Helper(arr, start, middle, thread - 1));
-		Thread rightT = new Thread(new Helper(arr, middle + 1, end, thread - 1));
+	    if (threads > 0) {
+		// Threaded version
+		Thread leftT = new Thread(new Helper(arr, start, middle, threads / 2));
+		Thread rightT = new Thread(new Helper(arr, middle + 1, end, threads / 2));
 		leftT.start();
 		rightT.start();
 		try {
@@ -88,12 +55,11 @@ public class ParallelMergeSort {
 		    rightT.join();
 		} catch (InterruptedException e) {}
 	    } else {
-		sort(arr, start, middle, thread);
-		sort(arr, middle + 1, end, thread);
+		// Sequential version
+		MergeSort.sort(arr, start, middle);
+		MergeSort.sort(arr, middle + 1, end);
 	    }
-
-    	    // sort(arr, start, middle);
-    	    // sort(arr, middle + 1, end);
+	    // Merge everything
 	    merge(arr, start, middle, end);
     	}
     }
