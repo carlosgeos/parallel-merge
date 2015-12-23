@@ -1,9 +1,3 @@
-/**
- * Carlos Requena López - 410031
- * INFO-F202. BA2
- * Projet Java
- */
-
 import java.util.*;
 import java.lang.*;
 
@@ -11,6 +5,7 @@ public class MergeSort
 {
     protected static final int ORDER = 10000000;
     protected static final int SENTINEL = ORDER + 1;
+    protected static final int INIT_SIZE = 60000;
 
     public static void merge(int arr[], int start, int middle, int end) {
 	int size1 = middle - start + 1;

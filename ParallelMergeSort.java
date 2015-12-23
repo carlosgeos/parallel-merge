@@ -9,11 +9,11 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class ParallelMergeSort extends MergeSort {
-    private static final int INIT_SIZE = 60000;
-    private static StopWatch sw = new StopWatch();;
+
+    private static StopWatch sw = new StopWatch();
 
     public static void main(String args[]) {
-	int cores = Runtime.getRuntime().availableProcessors();
+	int maxThreads = Runtime.getRuntime().availableProcessors();
 	int size = INIT_SIZE;
 
 	System.out.println("Sequential sorting:");
@@ -32,7 +32,7 @@ public class ParallelMergeSort extends MergeSort {
 	for (int i = 0; i < 7; ++i) {
 	    int[] arr = generateArray(size);
 	    sw.keepTime(i);
-	    sort(arr, 0, size - 1, cores);
+	    sort(arr, 0, size - 1, maxThreads);
 	    System.out.println("Elements: \t" + size+ "\telapsed time: " + sw.elapsedTime(i) + "\tms");
 	    size *= 2;
 	}
@@ -44,7 +44,7 @@ public class ParallelMergeSort extends MergeSort {
 	// available. Algorithm structure from Cormen.
     	if (start < end) {
     	    int middle = (start + end) / 2;
-	    if (threads > 0) {
+	    if (threads > 1) {
 		// Threaded version
 		Thread leftT = new Thread(new Helper(arr, start, middle, threads / 2));
 		Thread rightT = new Thread(new Helper(arr, middle + 1, end, threads / 2));
