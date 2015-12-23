@@ -5,10 +5,7 @@ public class MergeSort
 {
     protected static final int ORDER = 10000000;
     protected static final int SENTINEL = ORDER + 1;
-<<<<<<< HEAD
     protected static final int INIT_SIZE = 60000;
-=======
->>>>>>> e5e92900c2ee61a835fc6a18322d2d8a3b479711
 
     public static void merge(int arr[], int start, int middle, int end) {
 	int size1 = middle - start + 1;
