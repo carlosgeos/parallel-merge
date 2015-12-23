@@ -9,50 +9,8 @@ import java.lang.*;
 
 public class MergeSort
 {
-    private static final int SIZE = 50000000;
-    private static final int ORDER = 1000000;
-    private static final int SENTINEL = ORDER + 1;
-
-    public static void main(String args[])
-    {
-	int[] arr = generateArray();
-	sort(arr, 0, SIZE - 1);
-	System.out.println("Sorted array:");
-	System.out.println("---------------");
-	//display(arr);
-    }
-
-    public static int[] generateArray() {
-	Random randomNumber = new Random();
-	int[] arr = new int[SIZE];
-
-	for (int i = 0; i < SIZE; ++i) {
-	    arr[i] = randomNumber.nextInt(ORDER);
-	}
-
-	System.out.println("Unsorted array:");
-	System.out.println("---------------");
-	//display(arr);
-	return arr;
-    }
-
-    public static void display(int[] arr) {
-	System.out.print("[ ");
-	for (int i = 0; i < SIZE; ++i) {
-	    System.out.print(arr[i] + " ");
-	}
-	System.out.println("]\n");
-    }
-
-    public static void displayTemp(int[] arr, int start, int end) {
-	System.out.println("temp array:\n------------\n");
-	System.out.print("[ ");
-	for (int i = start; i < end + 1; ++i) {
-	    System.out.print(arr[i] + " ");
-	}
-	System.out.println("]\n");
-
-    }
+    protected static final int ORDER = 10000000;
+    protected static final int SENTINEL = ORDER + 1;
 
     public static void merge(int arr[], int start, int middle, int end) {
 	int size1 = middle - start + 1;
@@ -74,6 +32,27 @@ public class MergeSort
 	    }
 	}
     }
+
+    public static int[] generateArray(int size) {
+	Random randomNumber = new Random();
+	int[] arr = new int[size];
+
+	for (int i = 0; i < size; ++i) {
+	    arr[i] = randomNumber.nextInt(ORDER);
+	}
+	//display(arr);
+	return arr;
+    }
+
+    public static void display(int[] arr) {
+    	System.out.print("[ ");
+    	for (int i = 0; i < arr.length; ++i) {
+    	    System.out.print(arr[i] + " ");
+    	}
+    	System.out.println("]\n");
+    }
+
+
 
     public static void sort(int[] arr, int start, int end) {
     	if (start < end) {
