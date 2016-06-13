@@ -1,13 +1,16 @@
 # OpenJDK 1.8
 
 FILE = ParallelMergeSort
-DEPS = *.java
 
-parallel: $(FILE).class sort
+.PHONY: sort clean
 
-$(FILE).class: $(DEPS)
-	javac $(FILE).java
+parallel: sort
+
+%.class: %.java
+	javac $<
 
 sort: $(FILE).class
 	java $(FILE)
 
+clean:
+	rm *.class
