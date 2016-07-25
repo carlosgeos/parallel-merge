@@ -5,38 +5,82 @@
  */
 
 import java.lang.*;
-import java.util.*;
+import java.lang.reflect.Array;import java.util.*;
 import java.util.concurrent.*;
+import java.util.Arrays;
 
-public class ParallelMergeSort extends MergeSort {
 
-    private static StopWatch sw = new StopWatch();
+public class ParallelMergeSort<T extends Comparable> {
+
+    protected static final int ORDER = 1000;
+    protected static final int INIT_SIZE = 60000;
 
     public static void main(String args[]) {
-	int maxThreads = Runtime.getRuntime().availableProcessors();
 	int size = INIT_SIZE;
-
-	System.out.println("Sequential sorting:");
-	System.out.println("-------------------");
-	for (int i = 0; i < 7; ++i) {
-	    int[] arr = generateArray(size);
-	    sw.keepTime(i);
-	    MergeSort.sort(arr, 0, size - 1);
-	    System.out.println("Elements: \t" + size+ "\telapsed time: " + sw.elapsedTime(i) + "\tms");
-	    size *= 2;
-	}
-
-	size = INIT_SIZE;
+	ParallelMergeSort<Integer> instance = new ParallelMergeSort<>();
 	System.out.println("\n\nParallel sorting:");
 	System.out.println("-----------------");
-	for (int i = 0; i < 7; ++i) {
-	    int[] arr = generateArray(size);
-	    sw.keepTime(i);
-	    sort(arr, 0, size - 1, maxThreads);
-	    System.out.println("Elements: \t" + size+ "\telapsed time: " + sw.elapsedTime(i) + "\tms");
-	    size *= 2;
-	}
 
+	Integer[] arr = {5, 2, 4, 3, 6, 1};
+	instance.seq_merge(arr, arr.length);
+	instance.display(arr);
+    }
+
+    public void seq_merge(T[] v, int size) {
+	if (v.length > 1) {
+	    final int half_point = size / 2;
+	    T[] left = Arrays.copyOfRange(v, 0, half_point);
+	    T[] right = Arrays.copyOfRange(v, half_point, size);
+
+	    seq_merge(left, half_point);
+            seq_merge(right, size - half_point);
+
+	    System.out.println("------------------------");
+	    System.out.print("I've got: ");
+	    display(v);
+	    System.out.println("");
+
+
+	    T[] working_list = (T[]) Array.newInstance(v.getClass().getComponentType(), half_point);
+	    int i = 0, j = 0, k = 0;
+
+	    for (; i < half_point; ++i) {
+		working_list[i] = v[i];
+		System.out.print("w vector is: ");
+		display(working_list);
+	    }
+
+            while (j < half_point && i < size) {
+		//v[k++] = v[i].compareTo(working_list[j]) < 0 ? v[i++] : working_list[j++];
+		if (v[i].compareTo(working_list[j]) < 0) {
+		    System.out.println("Operate in v ! " + v[k] + " should equal " + v[i]);
+
+		    v[k++] = v[i++];
+		} else {
+		    System.out.println("Operate with both ! " + v[k] + " in v, should equal " + working_list[j] + " in w ");
+		    v[k++] = working_list[j++];
+		}
+		System.out.print("v: ");
+		display(v);
+            }
+
+	    while (j < half_point) {
+		System.out.println("Some extra work: ");
+		System.out.println(v[k] + " should be " + working_list[j]);
+		v[k++] = working_list[j++];
+	    }
+        }
+    }
+
+    public static Integer[] generateArray(int size) {
+	Random randomNumber = new Random();
+	Integer[] arr = new Integer[size];
+
+	for (int i = 0; i < size; ++i) {
+	    arr[i] = randomNumber.nextInt(ORDER);
+	}
+	//display(arr);
+	return arr;
     }
 
     public static void sort(int[] arr, int start, int end, int threads) {
@@ -60,7 +104,15 @@ public class ParallelMergeSort extends MergeSort {
 		MergeSort.sort(arr, middle + 1, end);
 	    }
 	    // Merge everything
-	    merge(arr, start, middle, end);
+	    //merge(arr, start, middle, end);
     	}
+    }
+
+    public static <T> void display(T[] arr) {
+    	System.out.print("[ ");
+    	for (int i = 0; i < arr.length; ++i) {
+    	    System.out.print(arr[i] + " ");
+    	}
+    	System.out.println("]");
     }
 }
