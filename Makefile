@@ -1,5 +1,3 @@
-# OpenJDK 1.8
-
 FILE = ParallelMergeSort
 
 .PHONY: sort clean

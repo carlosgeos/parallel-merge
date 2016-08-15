@@ -1,0 +1,77 @@
+java ParallelMergeSort
+
+
+Parallel sorting:
+-----------------
+
+--- THREAD ID : 9 -- (#2 total) ---
+Treating : 
+[ 0 4 3 -3 1 -2 2 -4 -1 ]
+
+--- THREAD ID : 10 -- (#3 total) ---
+Treating : 
+[ 0 4 3 -3 ]
+
+--- THREAD ID : 11 -- (#4 total) ---
+Treating : 
+[ 1 -2 2 -4 -1 ]
+
+--- THREAD ID : 12 -- (#7 total) ---
+Treating : 
+[ 0 4 ]
+
+--- THREAD ID : 14 -- (#8 total) ---
+Treating : 
+[ 3 -3 ]
+
+--- THREAD ID : 13 -- (#8 total) ---
+Treating : 
+[ 1 -2 ]
+
+--- THREAD ID : 15 -- (#11 total) ---
+Treating : 
+[ 2 -4 -1 ]
+
+--- THREAD ID : 16 -- (#13 total) ---
+Treating : 
+[ 1 ]
+
+--- THREAD ID : 20 -- (#13 total) ---
+Treating : 
+[ 4 ]
+
+--- THREAD ID : 17 -- (#13 total) ---
+Treating : 
+[ 3 ]
+
+--- THREAD ID : 18 -- (#13 total) ---
+Treating : 
+[ 0 ]
+
+--- THREAD ID : 22 -- (#11 total) ---
+Treating : 
+[ 2 ]
+
+--- THREAD ID : 19 -- (#10 total) ---
+Treating : 
+[ -3 ]
+
+--- THREAD ID : 21 -- (#9 total) ---
+Treating : 
+[ -2 ]
+
+--- THREAD ID : 23 -- (#6 total) ---
+Treating : 
+[ -4 -1 ]
+
+--- THREAD ID : 24 -- (#7 total) ---
+Treating : 
+[ -4 ]
+
+--- THREAD ID : 25 -- (#6 total) ---
+Treating : 
+[ -1 ]
+
+
+-- END --
+[ -4 -3 -2 -1 0 1 2 3 4 ]

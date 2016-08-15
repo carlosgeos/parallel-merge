@@ -5,10 +5,10 @@
  */
 
 import java.lang.*;
-import java.lang.reflect.Array;import java.util.*;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.Arrays;
-//import java.lang.reflect.ParameterizedType;
 
 public class ParallelMergeSort<T> {
 
@@ -18,8 +18,7 @@ public class ParallelMergeSort<T> {
 	System.out.println("\n\nParallel sorting:");
 	System.out.println("-----------------");
 
-	List<Integer> arr = new ArrayList<>(Arrays.asList(5,2,4,6,1,7,3,8));
-	//List<Integer> arr = new ArrayList<>(Arrays.asList(5,2,4,8,1,7,3,6));
+	List<Integer> arr = new ArrayList<>(Arrays.asList(0,4,3,-3,1,-2,2,-4,-1));
 	component_type = Integer.class;
 
 	Thread main_thread = new Thread(new Runnable() {
@@ -28,14 +27,24 @@ public class ParallelMergeSort<T> {
 		}
 	    });
 	main_thread.start();
+
+	// Wait for main thread to finish
+	try {
+	    main_thread.join();
+	} catch (InterruptedException e) {
+	    e.printStackTrace();
+	}
+	System.out.println("\n\n-- END --");
 	display(arr);
     }
 
     public static <T extends Comparable<? super T>> void merge(List<T> v, int size) {
-	System.out.println("------ THREAD : " + "num" + "------------------");
-	System.out.print("I've got: ");
-	display(v);
-	System.out.println("");
+	// Show info
+	synchronized (System.out) {
+	    System.out.println("\n--- THREAD ID : " + Thread.currentThread().getId() + " -- (#" + Thread.activeCount() + " total) ---");
+	    System.out.println("Treating : ");
+	    display(v);
+	}
 	if (v.size() > 1) {
 	    final int half_point = size / 2;
 	    List<T> left = v.subList(0, half_point);
@@ -48,7 +57,6 @@ public class ParallelMergeSort<T> {
 		    }
 		});
 	    left_thread.start();
-	    System.out.println("THREAD: " + left_thread.getName() + " STARTED");
 
 	    Thread right_thread = new Thread(new Runnable() {
 		    public void run() {
@@ -71,18 +79,13 @@ public class ParallelMergeSort<T> {
 
 	    int i = 0, j = 0, k = 0;
 
-	    for (; i < half_point; ++i) {
-		working_list[i] = v.get(i);
-	    }
+	    for (; i < half_point; ++i) working_list[i] = v.get(i);
 
-            while (j < half_point && i < size) {
+            while (j < half_point && i < size)
 		v.set(k++, v.get(i).compareTo(working_list[j]) < 0 ? v.get(i++) : working_list[j++]);
-		display(v);
-            }
 
-	    while (j < half_point) {
+	    while (j < half_point)
 		v.set(k++, working_list[j++]);
-	    }
         }
     }
 
